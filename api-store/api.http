@@ -5,6 +5,6 @@ GET http://localhost:3000/tasks
 # Content-Type: "application/json"
 
 # {
-#     "id": 1,
-#     "titulo": "Tarea1" 
+#     "titulo": "Tarea Nueva" 
+#     "descripcion: "Descripcion Nueva de la Tarea Nueva"  
 # }
