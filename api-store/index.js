@@ -41,13 +41,14 @@ app.post('/tasks', (req, res) => {
     // Genrar ID numerico unico 
     const id = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
 
-    data.id = id
+    // Destructurizacion de la nueva tarea 
+    const newTask = { id, ...data };
 
-    // Guardar 
-    tasks.push(data)
+    // Guardar
+    tasks.push(newTask);
 
-    //Respuesta al cliente 
-    res.status(201).json(req.body)
+    // Respuesta al cliente
+    res.status(201).json(newTask);
 });
 
 app.put('/tasks/:id', (req, res) => {
@@ -70,10 +71,10 @@ app.put('/tasks/:id', (req, res) => {
         })
     }
 
-    //Actualizar 
-    tasks[taskIndex] = { ...tasks[taskIndex], ...data }
+    //Actualizar nueva tarea 
+    tasks[taskIndex] = { id: tasks[taskIndex].id, ...data };
 
-    res.json(tasks[taskIndex])
+    res.json(tasks[taskIndex]);
 })
 
 app.delete('/tasks/:id', (req, res) => {
