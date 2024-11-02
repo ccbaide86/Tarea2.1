@@ -1,26 +1,100 @@
 import express, { json } from 'express'
+import tasks from './stores/tasks.json' with {type: "json"}
+import { validarTaskSchema } from './schemas/tasks.schema.js'
 
 const app = express() // instance de express (createServer)
 
-// Middleware para parsear JSON en las solicitudes
-app.use(express.json());
+const PORT = process.env.PORT || 3000
 
-// Lista en memoria para almacenar las tareas 
-let tasks = []
+// Middleware 
+app.disable('x-powered-y');
+app.use(json());
 
 //Rutas para obtener las tareas
 app.get('/tasks', (req, res) => {
-    res.json(tasks);
+    res
+        .header('Content-Type', 'aplication/json')
+        .status(200)
+        .json(tasks);
 })
 
 app.get('/tasks/:id', (req, res) => {
     const { id } = req.params;
     const task = tasks.find(t => t.id === parseInt(id));
     if (!task) {
-        return res.status(404).json({ message: 'Task not found' });
+        return res.status(404).json({ message: 'Tarea no encontrada' });
     }
-    res.json(task);
+    res.json(tasks);
 });
+
+app.post('/tasks', (req, res) => {
+    // validaciones fallidas con sus respectivos códigos de respuesta
+    const data = req.body
+    const success = validarTaskSchema(data)
+
+    if (!success) {
+        res.status(400).json({
+            message: JSON.parse(error.message)
+        })
+    }
+
+    // Guardar 
+    tasks.push(data)
+
+    //Respuesta al cliente 
+    res.status(201).jsom(req.body)
+});
+
+app.put('/tasks:id', (req, res) => {
+    // validaciones fallidas con sus respectivos códigos de respuesta
+    const { id } = req.params
+    const data = req.body
+
+    const success = validarTaskSchema(data)
+    if (!success) {
+        res.status(400).json({
+            message: JSON.parse(error.message)
+        })
+    }
+
+    const taskIndex = tasks.findIndex(task => task.id == id)
+
+    if (taskIndex == -1) {
+        res.status(404).json({
+            message: "Tarea no encontrada"
+        })
+    }
+
+    //Actualizar 
+    tasks[taskIndex] = { ...tasks[taskIndex], ...data }
+
+    res.jsom(tasks[taskIndex])
+})
+
+app.delete('/tasks:id', (req, res) => {
+    // validaciones fallidas con sus respectivos códigos de respuesta
+    const { id } = req.params
+    const data = req.body
+
+    const success = validarTaskSchema(data)
+    if (!success) {
+        res.status(400).json({
+            message: JSON.parse(error.message)
+        })
+    }
+
+    const taskIndex = tasks.findIndex(task => task.id == id)
+
+    if (taskIndex == -1) {
+        res.status(404).json({
+            message: "Tarea no encontrada"
+        })
+    }
+
+    //Eliminar 
+    const deletedTask = tasks.splice(taskIndex, 1)
+    res.json(deletedTask[0])
+})
 
 
 // Iniciar el servidor
