@@ -47,10 +47,10 @@ app.post('/tasks', (req, res) => {
     tasks.push(data)
 
     //Respuesta al cliente 
-    res.status(201).jsom(req.body)
+    res.status(201).json(req.body)
 });
 
-app.put('/tasks:id', (req, res) => {
+app.put('/tasks/:id', (req, res) => {
     // validaciones fallidas con sus respectivos códigos de respuesta
     const { id } = req.params
     const data = req.body
@@ -73,10 +73,10 @@ app.put('/tasks:id', (req, res) => {
     //Actualizar 
     tasks[taskIndex] = { ...tasks[taskIndex], ...data }
 
-    res.jsom(tasks[taskIndex])
+    res.json(tasks[taskIndex])
 })
 
-app.delete('/tasks:id', (req, res) => {
+app.delete('/tasks/:id', (req, res) => {
     // validaciones fallidas con sus respectivos códigos de respuesta
     const { id } = req.params
     const data = req.body
