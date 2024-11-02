@@ -38,6 +38,11 @@ app.post('/tasks', (req, res) => {
         })
     }
 
+    // Genrar ID numerico unico 
+    const id = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+
+    data.id = id
+
     // Guardar 
     tasks.push(data)
 
